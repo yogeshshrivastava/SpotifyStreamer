@@ -2,25 +2,24 @@ package com.udacity.android.spotifystreamer.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.android.spotifystreamer.R;
+import com.udacity.android.spotifystreamer.parcelable.TrackParcelable;
 import com.udacity.android.spotifystreamer.viewholder.SongsHolder;
 
 import java.util.List;
-
-import kaaes.spotify.webapi.android.models.Image;
-import kaaes.spotify.webapi.android.models.Track;
 
 /**
  * Created by yogesh.shrivastava on 6/7/15.
  */
 public class RecyclerTopTenAdapter extends RecyclerView.Adapter<SongsHolder> {
 
-    private List<Track> songsList;
+    private List<TrackParcelable> songsList;
     private Context context;
     private OnItemClickListener mItemClickListener;
 
@@ -28,7 +27,7 @@ public class RecyclerTopTenAdapter extends RecyclerView.Adapter<SongsHolder> {
         void onItemClick(View view , int position);
     }
 
-    public RecyclerTopTenAdapter(Context context, List<Track> songsList, OnItemClickListener mItemClickListener) {
+    public RecyclerTopTenAdapter(Context context, List<TrackParcelable> songsList, OnItemClickListener mItemClickListener) {
         this.context = context;
         this.songsList = songsList;
         this.mItemClickListener = mItemClickListener;
@@ -43,14 +42,11 @@ public class RecyclerTopTenAdapter extends RecyclerView.Adapter<SongsHolder> {
 
     @Override
     public void onBindViewHolder(SongsHolder holder, int pos) {
-        Track track = songsList.get(pos);
+        TrackParcelable track = songsList.get(pos);
         holder.songTitle.setText(track.name);
-        holder.albumTitle.setText(track.album.name);
-        if(track.album.images.size() > 0) {
-            Image image = track.album.images.get(track.album.images.size() - 1);
-            if(image != null) {
-                Picasso.with(context).load(image.url).into(holder.thumbnail);
-            }
+        holder.albumTitle.setText(track.albumName);
+        if(!TextUtils.isEmpty(track.albumImageUrl)) {
+            Picasso.with(context).load(track.albumImageUrl).into(holder.thumbnail);
         }
     }
 

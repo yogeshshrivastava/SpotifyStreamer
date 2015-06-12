@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import com.udacity.android.spotifystreamer.adapter.RecyclerTopTenAdapter;
 import com.udacity.android.spotifystreamer.decoration.SimpleDividerItemDecoration;
+import com.udacity.android.spotifystreamer.parcelable.TrackParcelable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,7 @@ import kaaes.spotify.webapi.android.models.Tracks;
 public class TopTenTracksFragment extends Fragment {
 
     private final static String TAG = TopTenTracksFragment.class.getSimpleName();
-
+    private final static String TOP_TEN_LIST = "topTenList";
     private final static String COUNTRY_CODE = "US";
 
     private View view;
@@ -44,7 +46,7 @@ public class TopTenTracksFragment extends Fragment {
     private ProgressBar progressBar;
     private AsyncTask<String, Void, List<Track>> topTenTracksTask;
     private TopTenTracksActivity activity;
-    private List<Track> trackList;
+    private ArrayList<TrackParcelable> trackList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,12 +67,30 @@ public class TopTenTracksFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         listView.setLayoutManager(layoutManager);
 
-        if(trackList != null) {
+        if(savedInstanceState != null){
+            trackList = savedInstanceState.getParcelableArrayList(TOP_TEN_LIST);
             showTracksList(trackList);
+        } else {
+            // if there is no saved instance that means this is a new load
+            Bundle bundle = activity.getIntent().getExtras();
+            if(bundle != null) {
+                String artistId = bundle.getString(Intent.EXTRA_TEXT);
+                loadTopTenSongs(artistId);
+            }
         }
 
         return view;
     }
+
+    private void updateToolbar() {
+        // if there is no saved instance that means this is a new load
+        Bundle bundle = activity.getIntent().getExtras();
+        if(bundle != null) {
+            String artistName = bundle.getString(Intent.EXTRA_TITLE);
+            activity.updateToolbarTitle(artistName);
+        }
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -87,13 +107,13 @@ public class TopTenTracksFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Bundle bundle = activity.getIntent().getExtras();
-        if(bundle != null) {
-            String artistId = bundle.getString(Intent.EXTRA_TEXT);
-            String artistName = bundle.getString(Intent.EXTRA_TITLE);
-            activity.updateToolbarTitle(artistName);
-            loadTopTenSongs(artistId);
-        }
+        updateToolbar();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(TOP_TEN_LIST, trackList);
     }
 
     private void loadTopTenSongs(final String artist) {
@@ -132,8 +152,11 @@ public class TopTenTracksFragment extends Fragment {
                 }
                 
                 if (tracks.size() > 0) {
-                    trackList = tracks;
-                    showTracksList(tracks);
+                    trackList = new ArrayList<>();
+                    for(Track track: tracks){
+                        trackList.add(new TrackParcelable(track));
+                    }
+                    showTracksList(trackList);
                     showTracksListFound();
                 } else {
                     showNoTracksFound();
@@ -187,7 +210,7 @@ public class TopTenTracksFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
-    private void showTracksList(final List<Track> tracks) {
+    private void showTracksList(final ArrayList<TrackParcelable> tracks) {
         adapter = new RecyclerTopTenAdapter(getActivity(), tracks, new RecyclerTopTenAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
