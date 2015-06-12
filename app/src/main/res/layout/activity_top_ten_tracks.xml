@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:elevation="5dp"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/top_ten_tracks"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/primary_title_toolbar" />
+                <TextView
+                    android:id="@+id/toolbar_artist_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textSize="@dimen/secondary_title_toolbar"
+                    android:textColor="@color/secondary_text" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+        <fragment
+            android:id="@+id/fragment"
+            android:name="com.udacity.android.spotifystreamer.TopTenTracksFragment"
+            tools:layout="@layout/fragment_top_ten_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+</LinearLayout>

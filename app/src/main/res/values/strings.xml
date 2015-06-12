@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Spotify Streamer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="hint_artist">Artist Name</string>
+    <string name="title_activity_top_ten_tracks">TopTenTracks</string>
+    <string name="title_activity_track_player">TrackPlayerActivity</string>
+    <string name="artist_name">Artist Name</string>
+    <string name="search_for_artist">Search for artist name</string>
+    <string name="no_artist_fount">No artist found.</string>
+    <string name="enter_valid_artist_name">Please enter a valid artist name</string>
+    <string name="error_while_getting_artist">Error while retrieving the artist list, please
+        retry.
+    </string>
+    <string name="tracks_error_message">Error while retrieving the tracks information, please
+        retry.
+    </string>
+    <string name="top_ten_tracks">Top Ten Tracks</string>
+</resources>
